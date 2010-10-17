@@ -1,0 +1,1 @@
+A simple bash based monitoring tool. Checks a series of machines for up/down and sends email notifications if they fail.
