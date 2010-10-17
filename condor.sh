@@ -11,7 +11,7 @@
 #3.2 10/31/05 Need to follow one email directive 
 #3.3 11/02/05 Need to have email sent only after host down on second cycle; added safteynet 
 #3.3.1 11/03/05 Added MAILGATE, changed all paths to belfry. Moved exectution to belfry. 
-#3.4 9/16/10 Moved execution to the directory where CondorNG is
+#3.4 10/16/10 Moved execution to the directory where CondorNG is
 
 ########### # Defines # ########### 
 TEMP=./tmp/condor.tmp
