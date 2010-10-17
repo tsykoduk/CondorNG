@@ -18,9 +18,9 @@ BASE=.
 TEMP=$BASE/tmp/condor.tmp 
 LOG=$BASE/log/condor.log
 TRACK=$BASE/log/condordown.log 
-SITE=`cat $(BASE)/condorNG/site.cfg` 
+SITE=`cat $(BASE)/site.cfg` 
 TOAST=$BASE/tmp/condor.toast 
-ML=`cat $(BASE)/condorNG/mail.cfg` 
+ML=`cat $(BASE)/mail.cfg` 
 RPT=$BASE/tmp/condor.rpt 
 MAILGATE= 
 
@@ -34,13 +34,15 @@ for i in $SITE do
 	if ! ping -c 3 -w 5 $i>/dev/null then 
 		echo $i:noping 
 		printf "Host:\tDown\t$i\t$(date)\n">>$LOG 
-		if [ -e "/tmp/$i.ping.dropped" ] then 
+		if [ -e "/tmp/$i.ping.dropped" ] 
+		then 
 			echo $i:down 
 			CALLHOME $i Down 
 			rm /tmp/$i.ping* 
 			touch /tmp/$i.ping.no 
 			printf "Host:\tDown\t$i\t$(date)\n">>$TRACK 
-		elif [ -e "/tmp/$i.ping.yes" ] then 
+		elif [ -e "/tmp/$i.ping.yes" ] 
+		then 
 			echo $i:dropped rm /tmp/$i.ping* 
 			touch /tmp/$i.ping.drop 
 			printf "Host:\tDropped\t$i\t$(date)\n">>$TRACK 
@@ -50,15 +52,18 @@ for i in $SITE do
 			printf "Host:\tDropped\t$i\t$(date)\n">>$TRACK 
 		fi 
 	else 
-		if [ -e "/tmp/$i.ping.no" ] then 
+		if [ -e "/tmp/$i.ping.no" ] 
+		then 
 			echo $i:back CALLHOME $i Up 
 			printf "Host:\tUp\t$i\t$(date)\n">>$TRACK 
 			printf "Host:\tUp\t$i\t$(date)\n">>$LOG 
-		elif [ -e "/tmp/$i.ping.drop" ] then 
+		elif [ -e "/tmp/$i.ping.drop" ] 
+		then 
 			echo $i:back 
 			printf "Host:\tUp\t$i\t$(date)\n">>$LOG 
 			printf "Host:\tUp\t$i\t$(date)\n">>$TRACK
-		elif [ -e "/tmp/$i.ping.yes" ] then 
+		elif [ -e "/tmp/$i.ping.yes" ] 
+		then 
 			printf "Host:\t\t$i\t$(date)\n">>$LOG 
 		fi 
 		echo $i:pingcheck 
