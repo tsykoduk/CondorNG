@@ -98,6 +98,7 @@ if ping -c 3 -i 5 $MAILGATE>$TEMP; then
 else 
 	# Uh-oh. We have a problem! 
 	# In a perfect world we would dial out with a modem 
+	# For you youngins, a modem is an old skool out of band communictions tool that used POTS.
 	printf "ALERT ALERT ALERT ALERT ALERT $(date) CANNOT SEND MAIL\n">>$LOG 
 	printf "ALERT ALERT ALERT ALERT ALERT $(date) CANNOT SEND MAIL\n">>$TRACK 
 	# Write a temp file so we can tell next cycle that we had a problem 
