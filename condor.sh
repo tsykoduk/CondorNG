@@ -48,6 +48,14 @@ do
 			rm $TEMPDIR/$i.ping* 
 			touch $TEMPDIR/$i.ping.no 
 			printf "Host:\tDown\t$i\t$(date)\n">>$TRACK 
+            # Adding in some basic DNS tests to insure that name resolution is working
+            hostcheck=`host -t A $i`
+            printf "Host:\tDNS test\t$hostcheck\t$(date)\n">>$TRACK
+            printf "$hostcheck\n">>$RPT
+            # We can ad more tests here since we know that the machine is down. If the test results 
+            # will be more then one line, I'd think about creating a new file to house them since the
+            # log is nice and pretty with one line each.
+            # TODO move all logging into a APACHE format?
 		elif [ -e "$TEMPDIR$i.ping.yes" ]; then 
 			echo $i:dropped 
             rm $TEMPDIR/$i.ping* 
