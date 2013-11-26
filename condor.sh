@@ -7,15 +7,17 @@
 #3.0.1 10/18/05 added mail.cfg and re-wrote callhome() to use it; also cleaned up code a wee bit 
 #3.0.2 10/18/05 removed path from config files 
 #3.0.3 10/18/05 readded path to config files 
-# #3.1.1 10/19/05 removed two call homes - program only calls home when host is down, comes up. 
+#3.1.1 10/19/05 removed two call homes - program only calls home when host is down, comes up. 
 #3.2 10/31/05 Need to follow one email directive 
 #3.3 11/02/05 Need to have email sent only after host down on second cycle; added safteynet 
 #3.3.1 11/03/05 Added MAILGATE, changed all paths to belfry. Moved exectution to belfry. 
 #3.4 10/16/10 Moved execution to the directory where CondorNG is
+#3.41 11/26/13 Removed extra "/" from temp directory setting & fixed logic errors
+#3.5 11/26/13 Added Host DNS check.
 
 ########### # Defines # ########### 
 TEMP=./tmp/condor.tmp
-TEMPDIR=./tmp/ 
+TEMPDIR=./tmp 
 LOG=./log/condor.log
 TRACK=./log/condordown.log 
 SITE=`cat ./site.cfg` 
@@ -40,18 +42,20 @@ do
 	if ! ping -c 3 -i 5 $i>$TEMP; then 
 		echo $i:noping 
 		printf "Host:\tDown\t$i\t$(date)\n">>$LOG 
-		if [ -e "$TEMPDIR$i.ping.dropped" ]; then 
+		if [ -e "$TEMPDIR/$i.ping.drop" ]; then 
 			echo $i:down 
-			CALLHOME $i Down 
+			printf "$i Down\n">>$RPT
 			rm $TEMPDIR/$i.ping* 
 			touch $TEMPDIR/$i.ping.no 
 			printf "Host:\tDown\t$i\t$(date)\n">>$TRACK 
 		elif [ -e "$TEMPDIR$i.ping.yes" ]; then 
-			echo $i:dropped rm $TEMPDIR/$i.ping* 
+			echo $i:dropped 
+            rm $TEMPDIR/$i.ping* 
 			touch $TEMPDIR/$i.ping.drop 
 			printf "Host:\tDropped\t$i\t$(date)\n">>$TRACK 
 		else 
-			echo $i:dropped rm $TEMPDIR/$i.ping* 
+			echo $i:dropped 
+            rm $TEMPDIR/$i.ping* 
 			touch $TEMPDIR/$i.ping.drop 
 			printf "Host:\tDropped\t$i\t$(date)\n">>$TRACK 
 		fi 
@@ -83,10 +87,10 @@ do
 done 
 }  
 
-CALLHOME () { 
-#Build the Report  
-printf "$1 $2\n">> $RPT  
-}  
+#CALLHOME () { 
+##Build the Report  
+#printf "$1 $2\n">> $RPT  
+#}  
 
 MAILER () { 
 # Check to see if we can get to the gateway 
